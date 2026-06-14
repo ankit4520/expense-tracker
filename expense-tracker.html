@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Expense Tracker</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 15px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 24px;
+      padding: 40px 32px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 10px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-wrapper {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    .logo-icon {
+      font-size: 22px;
+      color: white;
+    }
+
+    .header-text {
+      flex: 1;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 28px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .input-card {
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      letter-spacing: 0.3px;
+    }
+
+    .input {
+      padding: 14px 16px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      background: #ffffff;
+      color: #1f2937;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+      -webkit-appearance: none;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12), 0 2px 8px rgba(59, 130, 246, 0.15);
+    }
+
+    .input::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 24px 0;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .divider-text {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .datetime-section {
+      margin-bottom: 24px;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .quick-btn {
+      padding: 10px 16px;
+      background: #ffffff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #4b5563;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quick-btn:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .quick-icon {
+      font-size: 11px;
+    }
+
+    .datetime-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 14px;
+    }
+
+    .date-input, .time-input {
+      width: 100%;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px 28px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      border-radius: 11px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(59, 130, 246, 0.45);
+    }
+
+    .btn-primary:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-icon {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .list-card {
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-icon {
+      font-size: 17px;
+      color: #3b82f6;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+      background: #f3f4f6;
+      padding: 5px 11px;
+      border-radius: 7px;
+    }
+
+    .expense-list {
+      list-style: none;
+    }
+
+    .expense-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: #ffffff;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .expense-item:hover {
+      transform: translateX(4px);
+      border-color: rgba(59, 130, 246, 0.25);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.12);
+    }
+
+    .expense-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .expense-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .expense-meta {
+      font-size: 10px;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    .expense-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .expense-amount {
+      font-size: 16px;
+      font-weight: 700;
+      color: #059669;
+    }
+
+    .btn-delete {
+      background: #ffffff;
+      border: 1.5px solid #e5e7eb;
+      padding: 9px 11px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-delete:hover {
+      background: #fef2f2;
+      border-color: #ef4444;
+      transform: scale(1.1);
+    }
+
+    .delete-icon {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .btn-delete:hover .delete-icon {
+      color: #ef4444;
+    }
+
+    .total-card {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      border: none;
+      box-shadow: 0 8px 32px rgba(5, 150, 105, 0.35);
+    }
+
+    .total-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .total-icon {
+      font-size: 40px;
+      color: #d1fae5;
+    }
+
+    .total-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .total-label {
+      font-size: 13px;
+      color: #a7f3d0;
+      font-weight: 600;
+    }
+
+    .total-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -1px;
+    }
+
+    .today-card {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border: none;
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35);
+    }
+
+    .today-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .today-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .today-icon {
+      font-size: 18px;
+      color: #bfdbfe;
+    }
+
+    .today-date {
+      font-size: 12px;
+      color: #dbeafe;
+      font-weight: 500;
+    }
+
+    .today-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .today-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .today-label {
+      font-size: 13px;
+      color: #93c5fd;
+      font-weight: 600;
+    }
+
+    .today-value {
+      font-size: 40px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -1.5px;
+    }
+
+    .today-details {
+      display: flex;
+      gap: 16px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      text-align: right;
+    }
+
+    .detail-label {
+      font-size: 11px;
+      color: #93c5fd;
+      font-weight: 500;
+    }
+
+    .detail-value {
+      font-size: 19px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .clear-btn {
+      width: 100%;
+      padding: 12px 20px;
+      background: transparent;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 9px;
+      color: #dbeafe;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+
+    .clear-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .list-card::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .list-card::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 3px;
+    }
+
+    .list-card::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .list-card::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 15px 10px; }
+      .container { padding: 32px 24px; border-radius: 20px; }
+      .title { font-size: 24px; }
+      .card { padding: 24px 20px; }
+      .card-grid { grid-template-columns: 1fr; gap: 12px; }
+      .datetime-grid { grid-template-columns: 1fr; }
+      .quick-actions { flex-wrap: wrap; }
+      .total-value { font-size: 32px; }
+      .today-value { font-size: 36px; }
+      .btn-primary { padding: 15px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="container">
+      <header class="header">
+        <div class="header-content">
+          <div class="logo-wrapper">
+            <span class="logo-icon">◈</span>
+          </div>
+          <div class="header-text">
+            <h1 class="title">Expense Tracker</h1>
+            <p class="subtitle">Your data is saved automatically</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="card input-card">
+        <div class="card-grid">
+          <div class="field-group">
+            <label class="field-label">Expense Name</label>
+            <input type="text" id="expense-name" class="input" placeholder="e.g., Coffee" />
+          </div>
+          
+          <div class="field-group">
+            <label class="field-label">Amount (₹)</label>
+            <input type="number" id="expense-amount" class="input" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="divider">
+          <span class="divider-text">Date & Time</span>
+        </div>
+
+        <div class="datetime-section">
+          <div class="quick-actions">
+            <button class="quick-btn" onclick="setToday()">
+              <span class="quick-icon">◉</span>
+              Today
+            </button>
+            <button class="quick-btn" onclick="setYesterday()">
+              <span class="quick-icon">◌</span>
+              Yesterday
+            </button>
+          </div>
+          
+          <div class="datetime-grid">
+            <div class="field-group">
+              <label class="field-label">Date</label>
+              <input type="date" id="expense-date" class="input date-input" />
+            </div>
+            
+            <div class="field-group">
+              <label class="field-label">Time</label>
+              <input type="time" id="expense-time" class="input time-input" />
+            </div>
+          </div>
+        </div>
+
+        <button id="add-btn" class="btn-primary">
+          <span class="btn-icon">+</span>
+          <span class="btn-text">Add Expense</span>
+        </button>
+      </section>
+
+      <section class="card list-card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span class="title-icon">⋈</span>
+            Your Expenses
+          </h2>
+          <span class="badge" id="expense-count">0 items</span>
+        </div>
+        
+        <ul id="expense-list" class="expense-list"></ul>
+      </section>
+
+      <section class="card total-card">
+        <div class="total-content">
+          <span class="total-icon">◎</span>
+          <div class="total-info">
+            <span class="total-label">Total Expenses</span>
+            <span class="total-value">₹<span id="total-amount">0</span></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card today-card">
+        <div class="today-header">
+          <h2 class="today-title">
+            <span class="today-icon">◉</span>
+            Today's Expenses
+          </h2>
+          <span class="today-date" id="today-date"></span>
+        </div>
+        
+        <div class="today-summary">
+          <div class="today-main">
+            <span class="today-label">Total Today</span>
+            <span class="today-value">₹<span id="total-today">0</span></span>
+          </div>
+          
+          <div class="today-details">
+            <div class="detail-item">
+              <span class="detail-label">Transactions</span>
+              <span class="detail-value" id="today-count">0</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">All Expenses</span>
+              <span class="detail-value" id="all-count">0</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="clear-btn" onclick="clearAllData()">
+          🗑️ Clear All Data
+        </button>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const expenseName = document.getElementById('expense-name');
+    const expenseAmount = document.getElementById('expense-amount');
+    const expenseDate = document.getElementById('expense-date');
+    const expenseTime = document.getElementById('expense-time');
+    const addBtn = document.getElementById('add-btn');
+    const expenseList = document.getElementById('expense-list');
+    const totalAmount = document.getElementById('total-amount');
+    const expenseCount = document.getElementById('expense-count');
+    const totalToday = document.getElementById('total-today');
+    const todayCount = document.getElementById('today-count');
+    const allCount = document.getElementById('all-count');
+    const todayDate = document.getElementById('today-date');
+
+    let expenses = [];
+
+    function loadData() {
+      const saved = localStorage.getItem('expenses');
+      if (saved) {
+        expenses = JSON.parse(saved);
+        renderExpenses();
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+    }
+
+    function getCurrentDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return year + '-' + month + '-' + day;
+    }
+
+    function getCurrentTime() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      return displayHours + ':' + minutes + ' ' + ampm;
+    }
+
+    function formatTimeForInput(dateObj) {
+      const hours = dateObj.getHours();
+      const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+      return hours + ':' + minutes;
+    }
+
+    function formatDate(dateObj) {
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      return year + '-' + month + '-' + day;
+    }
+
+    function formatTime(dateObj) {
+      const hours = dateObj.getHours();
+      const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12;
+      return displayHours + ':' + minutes + ' ' + ampm;
+    }
+
+    function setToday() {
+      const today = new Date();
+      expenseDate.value = formatDate(today);
+      expenseTime.value = formatTimeForInput(today);
+    }
+
+    function setYesterday() {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      expenseDate.value = formatDate(yesterday);
+      expenseTime.value = formatTimeForInput(yesterday);
+    }
+
+    function setDefaultDateTime() {
+      const now = new Date();
+      expenseDate.value = formatDate(now);
+      expenseTime.value = formatTimeForInput(now);
+    }
+
+    function updateTodaySummary() {
+      const currentDate = getCurrentDate();
+      const todayExpenses = expenses.filter(exp => exp.date === currentDate);
+      const todayTotal = todayExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+      totalToday.textContent = todayTotal;
+      todayCount.textContent = todayExpenses.length;
+      allCount.textContent = expenses.length;
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      todayDate.textContent = new Date().toLocaleDateString('en-IN', dateOptions);
+    }
+
+    function updateTotal() {
+      const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+      totalAmount.textContent = total;
+      expenseCount.textContent = expenses.length + ' items';
+      updateTodaySummary();
+    }
+
+    function renderExpenses() {
+      expenseList.innerHTML = '';
+      expenses.forEach((exp, index) => {
+        const li = document.createElement('li');
+        li.className = 'expense-item';
+        li.innerHTML = '<div class="expense-main"><span class="expense-name">' + exp.name + '</span><span class="expense-meta">' + exp.date + ' · ' + exp.time + '</span></div><div class="expense-actions"><span class="expense-amount">₹' + exp.amount + '</span><button onclick="deleteExpense(' + index + ')" class="btn-delete"><span class="delete-icon">⋯</span></button></div>';
+        expenseList.appendChild(li);
+      });
+      updateTotal();
+    }
+
+    function addExpense() {
+      const name = expenseName.value.trim();
+      const amount = parseFloat(expenseAmount.value);
+      const date = expenseDate.value;
+      let time = expenseTime.value;
+
+      if (!time) {
+        time = getCurrentTime();
+      }
+
+      if (!name || isNaN(amount) || amount <= 0 || !date) {
+        showError('Please fill in expense name, amount, and date.');
+        return;
+      }
+
+      expenses.push({ name: name, amount: amount, date: date, time: time });
+      expenseName.value = '';
+      expenseAmount.value = '';
+      expenseTime.value = formatTimeForInput(new Date());
+      saveData();
+      renderExpenses();
+    }
+
+    function deleteExpense(index) {
+      expenses.splice(index, 1);
+      saveData();
+      renderExpenses();
+    }
+
+    function clearAllData() {
+      if (confirm('Are you sure you want to delete all expenses?')) {
+        expenses = [];
+        saveData();
+        renderExpenses();
+      }
+    }
+
+    function showError(message) {
+      const input = expenseAmount;
+      input.style.borderColor = '#ef4444';
+      input.style.boxShadow = '0 0 0 4px rgba(239, 68, 68, 0.1)';
+      setTimeout(function() {
+        input.style.borderColor = '';
+        input.style.boxShadow = '';
+      }, 2000);
+    }
+
+    addBtn.addEventListener('click', addExpense);
+    setDefaultDateTime();
+    loadData();
+  </script>
+</body>
+</html>
